@@ -1,0 +1,60 @@
+archi:
+  id: MlopsDemoPipeline
+  pipeline:
+    repo:
+      type: CodeCommit
+      name: mlops-demo
+      create: true
+    build:
+      compute: Small
+    validate:
+      compute: Small
+      emails:
+      - techie@lynx.rocks
+services:
+  network:
+    azCount: 2
+  clusters:
+    ecsFargate:
+      namespace: mlopsdemo.net
+    eksEc2:
+      k8Version: '1.20'
+      instanceType: inf1.xlarge
+  list:
+  -
+    id: Service1
+    ml:
+      type: CustomCont
+      # type: CustomK8
+      pipeline:
+        repo:
+          type: CodeCommit
+          name: bentoml-sample
+          create: true
+        build:
+          prebuildScript: prebuild.sh
+        # staging:
+        #   specFilename: stagingspec.yml
+        # test:
+        #   specFilename: testspec.yml
+        validate:
+          emails:
+          - techie@lynx.rocks
+        # deploy:
+        #   specFilename: deployspec.yml
+  -
+    id: Service2
+    ml:
+      type: CustomCont
+      # type: CustomK8
+      pipeline:
+        repo:
+          type: GitHub
+          name: bentoml-sample
+          tokenName: github-token
+          owner: engr-lynx
+        build:
+          prebuildScript: prebuild.sh
+        validate:
+          emails:
+          - techie@lynx.rocks
