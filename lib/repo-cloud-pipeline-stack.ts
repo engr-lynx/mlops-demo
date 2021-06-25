@@ -49,7 +49,6 @@ export class RepoCloudPipelineStack extends Stack {
       const { action: cleanupAction, grantee: cleanupFunc } = buildPyInvokeAction(this, {
         prefix: 'Cleanup',
         path: 'cdn-empty-handler',
-        handler: 'cdnempty.on_event',
         params,
         runOrder: validateStage.nextSequentialRunOrder(),
       });

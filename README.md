@@ -1,8 +1,10 @@
+# IaC and MLOps CI/CD Pipelines Deployed on AWS Container Services
 
-# IaC Pipeline Base
+Simplify building on AWS by adopting this [CDK](https://docs.aws.amazon.com/cdk/latest/guide/home.html) boilerplate for an [IaC Pipeline](https://searchitoperations.techtarget.com/tip/Building-an-infrastructure-as-code-pipeline-in-the-cloud). If you're new to AWS, this can help. It contains pre-made architectural decisions allowing you to get started quickly. Yet because it's IaC, you also have flexibility. You can easily update your architecture by pushing code modifications to your repository. 
 
-Boilerplate for an [IaC Pipeline](https://searchitoperations.techtarget.com/tip/Building-an-infrastructure-as-code-pipeline-in-the-cloud) using [CDK](https://docs.aws.amazon.com/cdk/latest/guide/home.html) and [CDK Pipelines](https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/).
+## Sample Usage
 
+(to be added)
 
 ## Prerequisites
 
@@ -10,6 +12,7 @@ Boilerplate for an [IaC Pipeline](https://searchitoperations.techtarget.com/tip/
 * [IAM admin](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html) with [programmatic access](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html)
 * if going to use CodeCommit, relevant IAM users should have [credentials set up](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_ssh-keys.html)
 * if going to use GitHub, [access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) needs to be in [Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/tutorials_basic.html)
+
 ## Initial Deployment
 
 * Configure `cdk.context.yaml`. See [Schema](#schema) below.
@@ -33,6 +36,29 @@ cdk bootstrap \
 cdk deploy
 ```
 * If CodeCommit is created for this IaC code, [connect the local to the remote repo](https://docs.aws.amazon.com/codecommit/latest/userguide/how-to-connect.html#how-to-connect-local).
+
+## Screenshots
+
+![IaC Pipeline 1](https://res.cloudinary.com/engr-lynx/image/upload/v1623983025/iac/iac-pipeline-1.png "IaC Pipeline 1")
+![IaC Pipeline 2](https://res.cloudinary.com/engr-lynx/image/upload/v1623983025/iac/iac-pipeline-2.png "IaC Pipeline 2")
+
+## Tech Stack
+
+[CDK](https://docs.aws.amazon.com/cdk/latest/guide/home.html), [CDK Pipelines](https://aws.amazon.com/blogs/developer/cdk-pipelines-continuous-delivery-for-aws-cdk-applications/), TypeScript
+
+## FAQ
+
+#### How does an IaC pipeline simplify building on the cloud?
+
+(to be added)
+
+#### Why use CDK instead of CloudFormation scripts?
+
+(to be added)
+
+#### What value does CDK Pipelines add to CDK?
+
+(to be added)
 
 ## Schema
 

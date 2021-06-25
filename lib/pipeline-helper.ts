@@ -8,7 +8,7 @@ import { PipelineProject, ComputeType, LinuxBuildImage, BuildSpec, Cache } from 
 import { Repository as EcrRepository, AuthorizationToken } from '@aws-cdk/aws-ecr';
 import { Bucket } from '@aws-cdk/aws-s3';
 import { Asset } from '@aws-cdk/aws-s3-assets';
-import { Function, Runtime, Code } from '@aws-cdk/aws-lambda';
+import { PythonFunction } from '@aws-cdk/aws-lambda-python';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { RetentionDays } from '@aws-cdk/aws-logs';
 import { Cdn } from './cdn';
@@ -73,6 +73,10 @@ export interface YarnSynthActionProps extends BasePipelineHelperProps, BuildConf
   sourceCode: Artifact,
 }
 
+// ToDo: optimize:
+//   runtimes
+//   docker image cache
+//   node libraries cache
 export function buildYarnSynthAction (scope: Stack, yarnSynthActionProps: YarnSynthActionProps) {
   const prefix = yarnSynthActionProps.prefix??'';
   const cloudAssembly = new Artifact('CloudAssembly');
@@ -80,6 +84,7 @@ export function buildYarnSynthAction (scope: Stack, yarnSynthActionProps: YarnSy
   const environment = {
     buildImage: LinuxBuildImage.AMAZON_LINUX_2_3,
     computeType,
+    privileged: true,
   };
   const actionName = prefix + 'Synth';
   const action = SimpleSynthAction.standardYarnSynth({
@@ -421,7 +426,8 @@ interface Policy {
 export interface PyInvokeActionProps extends BasePipelineHelperProps {
   policies?: Policy[],
   path: string,
-  handler: string,
+  index?: string,
+  handler?: string,
   params?: KeyValue,
   runOrder?: number,
 }
@@ -429,12 +435,12 @@ export interface PyInvokeActionProps extends BasePipelineHelperProps {
 export function buildPyInvokeAction (scope: Stack, pyInvokeActionProps: PyInvokeActionProps) {
   const prefix = pyInvokeActionProps.prefix??'';
   const initialPolicy = pyInvokeActionProps.policies?.map(policy => new PolicyStatement(policy));
-  const code = Code.fromAsset(join(__dirname, pyInvokeActionProps.path));
+  const entry = join(__dirname, pyInvokeActionProps.path);
   const handlerName = prefix + 'Handler';
-  const lambda = new Function(scope, handlerName, {
-    runtime: Runtime.PYTHON_3_8,
+  const lambda = new PythonFunction(scope, handlerName, {
+    entry,
+    index: pyInvokeActionProps.index,
     handler: pyInvokeActionProps.handler,
-    code,
     timeout: Duration.minutes(1),
     logRetention: RetentionDays.ONE_DAY,
     initialPolicy,

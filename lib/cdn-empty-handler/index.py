@@ -11,7 +11,7 @@ s3 = resource('s3')
 cf = client('cloudfront')
 cp = client('codepipeline')
 
-def on_event(event, context):
+def handler(event, context):
   logger.info('Received event: %s' % dumps(event))
   cp_job = event['CodePipeline.job']
   job_id = cp_job['id']
