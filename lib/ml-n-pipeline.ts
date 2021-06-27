@@ -5,11 +5,9 @@ import { RepoK8PipelineStack } from './repo-k8-pipeline-stack';
 import { CustomContConf, CustomK8Conf } from './context-helper';
 import { ContClusterStack } from './cont-cluster-stack';
 import { K8ClusterStack } from './k8-cluster-stack';
-import { PipelineCacheStack } from './pipeline-cache-stack';
 
 interface BaseMlNPipelineProps {
   prefix?: string,
-  pipelineCache: PipelineCacheStack,
 }
 
 export interface ContNPipelineProps extends BaseMlNPipelineProps, CustomContConf {
@@ -28,7 +26,6 @@ export function buildContNPipeline (scope: Construct, contNPipelineProps: ContNP
   new RepoContPipelineStack(scope, contPipelineId, {
     ...contNPipelineProps.pipeline,
     cont,
-    cacheBucket: contNPipelineProps.pipelineCache.bucket,
   });
 }
 
@@ -41,6 +38,5 @@ export function buildK8NPipeline (scope: Construct, k8NPipelineProps: K8NPipelin
   const k8PipelineId = prefix + 'MlPipeline';
   new RepoK8PipelineStack(scope, k8PipelineId, {
     ...k8NPipelineProps.pipeline,
-    cacheBucket: k8NPipelineProps.pipelineCache.bucket,
   });
 }

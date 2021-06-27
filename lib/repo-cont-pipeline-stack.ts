@@ -9,13 +9,13 @@ import { buildContBuildAction, buildCustomAction } from './pipeline-helper'
 
 export interface RepoContPipelineProps extends StackProps, PipelineConf {
   cont: ContStack,
-  cacheBucket: Bucket,
 }
 
 export class RepoContPipelineStack extends Stack {
 
   constructor(scope: Construct, id: string, repoContPipelineProps: RepoContPipelineProps) {
     super(scope, id, repoContPipelineProps);
+    const cacheBucket = new Bucket(this, 'CacheBucket');
     const pipelineStages = [];
     const { action: repoSource, sourceCode } = buildRepoSourceAction(this, {
       ...repoContPipelineProps.repo,
@@ -48,7 +48,7 @@ export class RepoContPipelineStack extends Stack {
         prefix,
         type: CodeBuildActionType.TEST,
         input: sourceCode,
-        cacheBucket: repoContPipelineProps.cacheBucket,
+        cacheBucket,
       });
       const testStage = {
         stageName: 'Test',

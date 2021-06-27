@@ -1,7 +1,6 @@
 import { Construct, Stage, StageProps } from '@aws-cdk/core';
 import { NetworkStack } from './network-stack';
 import { buildMlClusters } from './ml-clusters';
-import { PipelineCacheStack } from './pipeline-cache-stack';
 import { ServicesConf, MlType, ContextError } from './context-helper';
 import { buildContNPipeline, buildK8NPipeline } from './ml-n-pipeline';
 
@@ -22,7 +21,6 @@ export class CloudDeployStage extends Stage {
       prefix: 'Service',
       network: serviceNetwork,
     });
-    const servicePipelineCache = new PipelineCacheStack(this, 'ServicePipelineCache');
     servicesConf.list.forEach(serviceConf => {
       const prefix = serviceConf.id;
       const mlConf = serviceConf.ml;
@@ -35,7 +33,6 @@ export class CloudDeployStage extends Stage {
             ...mlConf,
             prefix,
             contCluster: serviceContCluster,
-            pipelineCache: servicePipelineCache,    
           });
           break;
         case MlType.CustomK8:
@@ -46,7 +43,6 @@ export class CloudDeployStage extends Stage {
             ...mlConf,
             prefix,
             k8Cluster: serviceK8Cluster,
-            pipelineCache: servicePipelineCache,    
           });
           break;
         default:

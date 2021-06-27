@@ -6,14 +6,13 @@ import { buildRepoSourceAction } from './pipeline-helper';
 import { PipelineConf } from './context-helper';
 import { buildContBuildAction, buildCustomAction } from './pipeline-helper'
 
-export interface RepoK8PipelineProps extends StackProps, PipelineConf {
-  cacheBucket: Bucket,
-}
+export interface RepoK8PipelineProps extends StackProps, PipelineConf {}
 
 export class RepoK8PipelineStack extends Stack {
 
   constructor(scope: Construct, id: string, repoK8PipelineProps: RepoK8PipelineProps) {
     super(scope, id, repoK8PipelineProps);
+    const cacheBucket = new Bucket(this, 'CacheBucket');
     const pipelineStages = [];
     const { action: repoSource, sourceCode } = buildRepoSourceAction(this, {
       ...repoK8PipelineProps.repo,
@@ -46,7 +45,7 @@ export class RepoK8PipelineStack extends Stack {
         prefix,
         type: CodeBuildActionType.TEST,
         input: sourceCode,
-        cacheBucket: repoK8PipelineProps.cacheBucket,
+        cacheBucket,
       });
       const testStage = {
         stageName: 'Test',
