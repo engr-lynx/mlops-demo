@@ -4,13 +4,17 @@ import { buildMlClusters } from './ml-clusters';
 import { ServicesConf, MlType, ContextError } from './context-helper';
 import { buildContNPipeline, buildK8NPipeline } from './ml-n-pipeline';
 
+interface CloudDeployProps extends StageProps {
+  cacheBucketArn: string,
+}
+
 /**
  * Deployable unit of entire architecture
  */
 export class CloudDeployStage extends Stage {
 
-  constructor(scope: Construct, id: string, props?: StageProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, id: string, cloudDeployProps: CloudDeployProps) {
+    super(scope, id, cloudDeployProps);
     const servicesContext = this.node.tryGetContext('services');
     const servicesConf = servicesContext as ServicesConf;
     const serviceNetwork = new NetworkStack(this, 'ServiceNetwork', {
@@ -33,6 +37,7 @@ export class CloudDeployStage extends Stage {
             ...mlConf,
             prefix,
             contCluster: serviceContCluster,
+            cacheBucketArn: cloudDeployProps.cacheBucketArn,
           });
           break;
         case MlType.CustomK8:

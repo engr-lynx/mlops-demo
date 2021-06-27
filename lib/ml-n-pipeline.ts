@@ -12,6 +12,7 @@ interface BaseMlNPipelineProps {
 
 export interface ContNPipelineProps extends BaseMlNPipelineProps, CustomContConf {
   contCluster: ContClusterStack,
+  cacheBucketArn: string,
 }
 
 export function buildContNPipeline (scope: Construct, contNPipelineProps: ContNPipelineProps) {
@@ -26,6 +27,7 @@ export function buildContNPipeline (scope: Construct, contNPipelineProps: ContNP
   new RepoContPipelineStack(scope, contPipelineId, {
     ...contNPipelineProps.pipeline,
     cont,
+    cacheBucketArn: contNPipelineProps.cacheBucketArn,
   });
 }
 

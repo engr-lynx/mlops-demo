@@ -58,7 +58,9 @@ export class RepoCloudPipelineStack extends Stack {
       distribution.grantInvalidate(cleanupFunc);
       validateStage.addActions(validateAction, approvalAction, cleanupAction);
     };
-    const deploy = new CloudDeployStage(this, 'Deploy');
+    const deploy = new CloudDeployStage(this, 'Deploy', {
+      cacheBucketArn: cacheBucket.bucketArn,
+    });
     repoCloudPipeline.addApplicationStage(deploy);
   }
 
