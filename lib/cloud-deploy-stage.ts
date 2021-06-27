@@ -5,7 +5,7 @@ import { ServicesConf, MlType, ContextError } from './context-helper';
 import { buildContNPipeline, buildK8NPipeline } from './ml-n-pipeline';
 
 interface CloudDeployProps extends StageProps {
-  cacheBucketArn: string,
+  cacheBucketArn?: string,
 }
 
 /**
@@ -13,7 +13,7 @@ interface CloudDeployProps extends StageProps {
  */
 export class CloudDeployStage extends Stage {
 
-  constructor(scope: Construct, id: string, cloudDeployProps: CloudDeployProps) {
+  constructor(scope: Construct, id: string, cloudDeployProps?: CloudDeployProps) {
     super(scope, id, cloudDeployProps);
     const servicesContext = this.node.tryGetContext('services');
     const servicesConf = servicesContext as ServicesConf;
@@ -37,7 +37,7 @@ export class CloudDeployStage extends Stage {
             ...mlConf,
             prefix,
             contCluster: serviceContCluster,
-            cacheBucketArn: cloudDeployProps.cacheBucketArn,
+            cacheBucketArn: cloudDeployProps?.cacheBucketArn,
           });
           break;
         case MlType.CustomK8:
@@ -48,6 +48,7 @@ export class CloudDeployStage extends Stage {
             ...mlConf,
             prefix,
             k8Cluster: serviceK8Cluster,
+            cacheBucketArn: cloudDeployProps?.cacheBucketArn,
           });
           break;
         default:

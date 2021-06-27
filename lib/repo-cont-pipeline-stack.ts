@@ -9,14 +9,19 @@ import { buildContBuildAction, buildCustomAction } from './pipeline-helper'
 
 export interface RepoContPipelineProps extends StackProps, PipelineConf {
   cont: ContStack,
-  cacheBucketArn: string,
+  cacheBucketArn?: string,
 }
 
 export class RepoContPipelineStack extends Stack {
 
   constructor(scope: Construct, id: string, repoContPipelineProps: RepoContPipelineProps) {
     super(scope, id, repoContPipelineProps);
-    const cacheBucket = Bucket.fromBucketArn(this, 'CacheBucket', repoContPipelineProps.cacheBucketArn);
+    let cacheBucket;
+    if (repoContPipelineProps.cacheBucketArn) {
+      cacheBucket = Bucket.fromBucketArn(this, 'CacheBucket', repoContPipelineProps.cacheBucketArn);
+    } else {
+      cacheBucket = new Bucket(this, 'CacheBucket');
+    };
     const pipelineStages = [];
     const { action: repoSource, sourceCode } = buildRepoSourceAction(this, {
       ...repoContPipelineProps.repo,
